@@ -1,4 +1,4 @@
-# Step-by-step guide on how to mount a NER node validator on Hetzner cloud
+# Step-by-step guide on how to mount a NEAR node validator on Hetzner cloud
 
 This guide will help you to setup a running NEAR validator node for shardnet on Hetzner Cloud
 
@@ -88,7 +88,7 @@ You can find your public key in the `~/.ssh/` folder of your computer (Linux, Ma
 
 Run ```cat ~/.ssh/id_rsa.pub``` and copy key
 
-If you don't have a ~/.ssh folder and/or public key yet, you can create one by running `ssh-keygen -o -t rsa -b 4096` in the terminal of your computer and following the instructions. It generates the `id_rsa.pub` together with the secret key.
+If you don't have a ~/.ssh folder and/or public key yet, you can create one by running `ssh-keygen -o -t rsa -b 4096` in the terminal of your computer and follow the instructions. It generates the `id_rsa.pub` together with the secret key.
 
 h) Server name
 
@@ -114,6 +114,31 @@ You are now ready to install the NEAR node.
 You are now connected to your server.
 
 - execute `sudo apt update && sudo apt upgrade -y` to update your Linux
+
+### 2) Link mounted volume
+
+As all data will be stored on the mounted 500 GB volume we will link the mounted volume to our workdir in the home folder for easy access.
+
+Run `df -h -x tmpfs -x devtmpfs` to see all available volumes, output should look like this:
+
+````
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       150G   85G   60G  59% /
+/dev/sda15      253M  1.1M  252M   1% /boot/efi
+/dev/sdb        500G   24K  500G   1% /mnt/HC_Volume_21507040
+````
+
+So our 500GB volume is mounted on `/mnt/HC_Volume_21507040`.
+
+We now create a symbolic link from our workdir folder in our user home directory to this path by running:
+
+`ln -s /mnt/HC_Volume_21507040 ~/near`
+
+If you run `ls -la ~/` you should see something like this:
+
+`near -> /mnt/HC_Volume_21507040`
+
+You can now access the volume by changing directory to `cd ~/near`, we will work in this folder from now on.
 
 ### 2) Install Client
 
@@ -161,7 +186,9 @@ Source the environment
 
 ### 3) Install Near Core
 
-- Checkout project
+a) Checkout project
+
+Make sure you are in your workdir on the 500 GB volume (~/near) then run:
 
 ```
 git clone https://github.com/near/nearcore
@@ -171,9 +198,9 @@ git fetch
 
 Run ```git checkout <commit>``` to checkout a specific commit id or tag with ```git checkout tags/<tag>```
 
-- Compile Near Core
+b) Build Near Core
 
-Charnge directory to nearcore folder and run to build: 
+Change directory to nearcore folder and run to build: 
 
 ```
 cd nearcore
