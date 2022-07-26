@@ -1,13 +1,16 @@
-# Step-by-step guide on how to mount a NEAR node validator on Hetzner cloud
+# Setup NEAR validator node on Hetzner cloud
 
-This guide will help you to setup a running NEAR validator node for shardnet on Hetzner Cloud
+This guide will help you to setup a running NEAR validator node for shardnet on Hetzner Cloud.
 
-# Hetzner Pricing (depending on VAT)
-Server CPX31: 14.16€/mo
+# Hetzner Pricing
 
-500GB Volume: 23.80€/mo
+Pricing differs slightly based on your region (VAT).
 
-Total: 37.96€/mo
+Server CPX31: ~14.16 €/mo
+
+500GB Volume: ~23.80 €/mo
+
+Total: ~37.96 €/mo
 
 # Step 1 - Create Hetzner account
 Goto https://accounts.hetzner.com/signUp, fill out the registration form with your personal data to create a new Hetzner account.
@@ -367,7 +370,7 @@ Every 5 minutes this cron job executes the ping command. Save and close the file
 
 ### 8) Monitoring
 
-You can monitor your node via the RPC endpoint, under `http://<YOUR_SERVER_IP>:3030/metrics` you can view the node metrics to build a dashboard.
+You can monitor your node via the RPC endpoint. At `http://<YOUR_SERVER_IP>:3030/metrics` you can view the node metrics to build a dashboard.
 
 If you want a quick and easy Monitoring solution, you can use the Cunum NEAR Validator Metrics dashboard. Just fill in your node's host and pool name and press "Add Metrics" to configure the dashboard and you are good to go.
 
