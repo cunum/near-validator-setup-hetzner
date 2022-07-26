@@ -15,14 +15,14 @@ Goto https://accounts.hetzner.com/signUp, fill out the registration form with yo
 ![alt text](./img/registration.png)
 
 # Step 2 - Setup Cloud Server
-Goto Hetzner cloud console (https://console.hetzner.cloud)
+Goto Hetzner cloud console at https://console.hetzner.cloud
 
 ### 1) Create new project
-Press "Create new project", name it something like "near-node"
+Press "Create new project", name it as you like, i.e. "near-node"
 
 ![alt text](./img/project.png)
 
-### 2) Click on "Create Server" on your new project
+### 2) Click "Create Server" on your new project
 
 ![alt text](./img/create.png)
 
@@ -68,7 +68,7 @@ So add rules for Port 22, 24567 and 3030 like below.
 
 ![alt text](./img/firewall-rule.png)
 
-Name the Firewall rules as you like and press "Create Firewall". Then switch back the other Browser tab you can now select the Firewall Rules you just created.
+Name the Firewall rules as you like and press "Create Firewall". Then switch back to the other Browser tab, you can now select the Firewall Rules you just created.
 
 ![alt text](./img/firewall-done.png)
 
@@ -113,7 +113,7 @@ You are now ready to install the NEAR node.
 
 You are now connected to your server.
 
-- execute `sudo apt update && sudo apt upgrade -y` to update your Linux
+- execute `sudo apt update && sudo apt upgrade -y` to update your distribution
 
 ### 2) Link mounted volume
 
@@ -134,11 +134,11 @@ We now create a symbolic link from our workdir folder in our user home directory
 
 `ln -s /mnt/HC_Volume_21507040 ~/near`
 
-If you run `ls -la ~/` you should see something like this:
+If you run `ls -la ~/` you should see something like this, the symbolic link has been created.
 
 `near -> /mnt/HC_Volume_21507040`
 
-You can now access the volume by changing directory to `cd ~/near`, we will work in this folder from now on.
+You can now access the volume by changing directory to `~/near`, we will work in this directory from now on.
 
 ### 2) Install Client
 
@@ -173,9 +173,15 @@ USER_BASE_BIN=$(python3 -m site --user-base)/bin
 export PATH="$USER_BASE_BIN:$PATH"
 ```
 - install building env
-```sudo apt install clang build-essential make```
+```
+sudo apt install clang build-essential make
+```
 - install rust and cargo
-```curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh```
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+You will see output like this:
 
 ![alt text](./img/rust.png)
 
@@ -188,7 +194,12 @@ Source the environment
 
 a) Checkout project
 
-Make sure you are in your workdir on the 500 GB volume (~/near) then run:
+Make sure you are in your workdir (on the 500 GB volume):
+```
+cd ~/near
+```
+
+Then run:
 
 ```
 git clone https://github.com/near/nearcore
@@ -196,7 +207,10 @@ cd nearcore
 git fetch
 ```
 
-Run ```git checkout <commit>``` to checkout a specific commit id or tag with ```git checkout tags/<tag>```
+Run ```git checkout <commit>``` to checkout a specific commit id or tag with ```git checkout tags/<tag>```. The recommended current commit id and/or tag is posted on Discord under announcements.
+Current recommended tag at time of this writing is `shardnet`.
+
+```git checkout tags/shardnet```
 
 b) Build Near Core
 
@@ -232,17 +246,31 @@ rm ~/.near/config.json
 wget -O ~/.near/config.json https://s3-us-west-1.amazonaws.com/build.nearprotocol.com/nearcore-deploy/shardnet/config.json
 ```
 
-Now we have to also create a `validator_key.json` file in the `~/.near` folder which contains the signing keys, if you already did the near client login procedure (see chapter 3 - Client Login) we already have the key file stored on the system.
-We move it to the `~/.near` folder by running:
+Now we have to also create a `validator_key.json` file in the `~/.near` folder which contains the signing keys of your node. If you already did the near client login procedure (see chapter 3 - Client Login) we already have the key file stored on the system.
 
-```cp ~/.near-credentials/shardnet/xx.shardnet.near.json ~/.near/validator_key.json``` (replace xx with your wallet id)
+We move it to the `~/.near` folder by running (replace xx with your wallet id):
+
+```
+cp ~/.near-credentials/shardnet/xx.shardnet.near.json ~/.near/validator_key.json
+```
 
 Edit the `validator_key.json` by running
-```vi ~/.near/validator_key.json```
+```
+vi ~/.near/validator_key.json
+```
 
-- Edit “account_id” => xx.factory.shardnet.near, where xx is your PoolName
+- Edit “account_id” => add "factory", so it looks like this xx.factory.shardnet.near, where xx is your PoolName
 - Change "private_key" to "secret_key"
-- Save file
+
+It should looks like this:
+
+```
+{
+  "account_id": "xxxx.factory.shardnet.near",
+  "public_key": "ed25519:####",
+  "secret_key": "ed25519:****"
+}
+```
 
 Node setup is done now.
 
@@ -308,18 +336,24 @@ Check your pool is now visible on https://explorer.shardnet.near.org/nodes/valid
 
 You should now stake some NEAR to your pool by running
 
-`near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <account_id> --gas=300000000000000`
+```
+near call <staking_pool_id> deposit_and_stake --amount <amount> --accountId <account_id> --gas=300000000000000
+```
 
 Replace before execution:
 
 - staking_pool_id => for example "stakewars.factory.shardnet.near"
 - account_id => like above "xx.shardnet.near"
+- amount => how much stake, i.e. 500
 
 ### 7) Setup ping command
 
 A ping issues a new proposal and updates the staking balances for your delegators. A ping should be issued each epoch to keep reported rewards current.
 
-command is ```near call <staking_pool_id> ping '{}' --accountId <account_id> --gas=300000000000000```
+The command is:
+```
+near call <staking_pool_id> ping '{}' --accountId <account_id> --gas=300000000000000
+```
 
 This command has to be executed periodically, so we create a cron job for it.
 
@@ -330,3 +364,13 @@ Create a new Crontab by running ```crontab -e``` and paste the following (replac
 ```
 
 Every 5 minutes this cron job executes the ping command. Save and close the file and it's active.
+
+### 8) Monitoring
+
+You can monitor your node via the RPC endpoint, under `http://<YOUR_SERVER_IP>:3030/metrics` you can view the node metrics to build a dashboard.
+
+If you want a quick and easy Monitoring solution, you can use the Cunum NEAR Validator Metrics dashboard. Just fill in your node's host and pool name and press "Add Metrics" to configure the dashboard and you are good to go.
+
+https://near.cunum.com/metrics
+
+![alt text](./img/dashboard.png)
