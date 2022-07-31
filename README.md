@@ -372,7 +372,7 @@ Every 5 minutes this cron job executes the ping command. Save and close the file
 
 You can monitor your node via the RPC endpoint. At `http://<YOUR_SERVER_IP>:3030/metrics` you can view the node metrics to build a dashboard.
 
-If you want a quick and easy Monitoring solution, you can use the Cunum NEAR Validator Metrics dashboard. Just fill in your node's host and pool name and press "Add Metrics" to configure the dashboard and you are good to go.
+If you want a quick and easy Monitoring solution, you can use the Cunum NEAR Validator Metrics dashboard. Just fill in your node's host (RPC port 3030 of your node must be reachable) and press "Add Metrics" to configure the dashboard and you are good to go.
 
 https://near.cunum.com/metrics
 
