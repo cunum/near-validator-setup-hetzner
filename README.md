@@ -363,10 +363,10 @@ This command has to be executed periodically, so we create a cron job for it.
 Create a new Crontab by running ```crontab -e``` and paste the following (replace staking poolId and accountId):
 
 ```
-*/5 * * * * near call <staking_pool_id> ping '{}' --accountId <account_id> --gas=300000000000000
+0 */2 * * * near call <staking_pool_id> ping '{}' --accountId <account_id> --gas=300000000000000
 ```
 
-Every 5 minutes this cron job executes the ping command. Save and close the file and it's active.
+Every 2 hours this cron job executes the ping command. Save and close the file and it's active.
 
 ### 8) Monitoring
 
