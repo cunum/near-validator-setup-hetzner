@@ -135,7 +135,7 @@ So our 500GB volume is mounted on `/mnt/HC_Volume_21507040`.
 
 We now create a symbolic link from our workdir folder in our user home directory to this path by running:
 
-`ln -s /mnt/HC_Volume_21507040 ~/near`
+` `
 
 If you run `ls -la ~/` you should see something like this, the symbolic link has been created.
 
@@ -293,7 +293,7 @@ Type=simple
 User=<USER>
 #Group=near
 WorkingDirectory=/home/<USER>/.near
-ExecStart=/home/<USER>/nearcore/target/release/neard run
+ExecStart=/home/<USER>/near/nearcore/target/release/neard run
 Restart=on-failure
 RestartSec=30
 KillSignal=SIGINT
